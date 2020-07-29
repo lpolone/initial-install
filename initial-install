@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function initial_install () {
+
+    echo " "
+    echo "***** Initial Install *****"
+    echo " "
+
+    echo "[TASK $((++count))] Running yum update"
+    sudo yum update -y >/dev/null 2>&1
+    
+    echo "[TASK $((++count))] Instaling initial packages"
+    sudo yum install -y epel-release >/dev/null 2>&1
+    sudo yum install -y vim lsof wget net-tools unzip telnet ntpdate htop git nfs-utils mailcap >/dev/null 2>&1
+
+    echo "[TASK $((++count))] Disabling SELinux"
+    setenforce 0
+    sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
+
+    echo "[TASK $((++count))] Setting timezone"
+    ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+}
